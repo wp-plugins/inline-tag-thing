@@ -1,6 +1,6 @@
 === Inline Tag Thing ===
 Contributors: christined
-Tags: tags, admin, categories
+Tags: tags, tagging
 Requires at least: 2.3
 Tested up to: 2.3b3
 Stable tag: trunk
