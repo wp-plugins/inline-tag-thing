@@ -3,7 +3,7 @@
 Plugin Name: Inline Tag Thing
 Plugin URI: http://www.neato.co.nz/wordpress-things/inline-tag-thing
 Description: A thing for editing tags inline, using AJAX magic.
-Version: beta 2
+Version: beta 3
 Author: Christine From The Internet
 Author URI: http://www.neato.co.nz
 */
