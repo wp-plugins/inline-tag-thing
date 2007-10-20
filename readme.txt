@@ -18,5 +18,13 @@ To perform these manipulations, you need to have the permissions to edit the und
 1. This is a screenshot of the tag entry box.
 
 == Installation ==
-1. Drop the plugin file into your wordpress plugins folder.  The plugin expects to be installed in /wp-content/plugins/InlineTagThing/
+1. Drop the plugin file into your wordpress plugins folder.  It will work either in a subfolder,  or in the base plugin directory.
 1. Enable the plugin.
+
+== Advanced Usage ==
+
+There are two advanced options.  To change these options, you'll need to set a couple of flags in the plugin file.
+
+Changing $automagicEmbed to false will stop automagically including the inline tag adder at the end of your content,  which allows you to use the ITT_ShowWidget() template tag to display the inline tag adder in a location of your choosing.
+
+Changing $showExistingTags to true will add a dropdown list containing the tags which are currently in use which you can add by choosing a tag and clicking the + button.

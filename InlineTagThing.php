@@ -8,10 +8,24 @@ Author: Christine From The Internet
 Author URI: http://www.neato.co.nz
 */
 
+// If you change this to false, the tag thing will no longer be automatically included at the end of posts.  You'll need
+// to use the ITT_ShowWidget() template tag, inside the loop, to get it to show.
+$automagicEmbed = true;
+
+// If you change this to true, any existing tags will be included as a dropdown list along after the text box.
+$showExistingTags = false;
+
+$pluginDirectory = '/wp-content/plugins';
+
 // AJAX Processing
 if ($_POST['action'] && ($_POST['action'] == 'ITT_ProcessTag' || $_POST['action'] == 'ITT_ProcessRemoveTag') ) {
-	require('../../../wp-blog-header.php');
-
+	if (substr(dirname(__FILE__), strlen($pluginDirectory) * -1) == $pluginDirectory) {
+		require('../../wp-blog-header.php');
+	} else {
+		// blog header is a level lower if the plugin is in a subdirectory.
+		require('../../../wp-blog-header.php');
+	}
+	
 	if (!current_user_can( 'edit_post', $postid )) die("alert('You do not have the correct permissions to manipulate tags')");
 
 	$error = false;
@@ -84,7 +98,7 @@ function ITT_ShowJavascript() {
 	<script type="text/javascript">
 	function Things_AddTagToPost(tag, postid)
 	{
-		var mysack = new sack("<?php bloginfo( 'wpurl' ); ?>/wp-content/plugins/InlineTagThing/InlineTagThing.php" );    
+		var mysack = new sack("<?php bloginfo( 'wpurl' ); ?><?php echo substr(__FILE__, strpos(__FILE__, '$pluginDirectory')) ?>" );    
 		if (tag != "" && postid != "") {
 			mysack.execute = 1;
 			mysack.method = 'POST';
@@ -101,7 +115,7 @@ function ITT_ShowJavascript() {
 
 	function Things_RemoveTagFromPost(tag, postid)
 	{
-		var mysack = new sack("<?php bloginfo( 'wpurl' ); ?>/wp-content/plugins/InlineTagThing/InlineTagThing.php" );    
+		var mysack = new sack("<?php bloginfo( 'wpurl' ); ?><?php echo substr(__FILE__, strpos(__FILE__, '$pluginDirectory')) ?>" );    
 		if (tag != "" && postid != "") {
 			mysack.execute = 1;
 			mysack.method = 'POST';
@@ -119,17 +133,45 @@ function ITT_ShowJavascript() {
 	<?php
 }
 
-function ITT_ShowWidget($content) {
+function ITT_EmbedWidget($content) {
 	global $post, $user_level;
 
 	$postid = $post->ID;
 
 	if (!current_user_can( 'edit_post', $postid )) return $content;
 	
-	$content .= "<div style=\"border-top:1px solid #bbc; border-bottom:1px solid #bbc; background:#efefff; padding:3px;\"><strong>Add Tags</strong>: <input type=\"text\" size=\"9\" id=\"soloAddTag-$postid\" /><input type=\"button\" value=\"+\" onClick=\"Things_AddTagToPost(document.getElementById('soloAddTag-$postid').value, '$postid')\" /> &nbsp; Currently Assigned: <span id=\"assignedTags-$postid\">" . ITT_GetSimpleTagList($postid) . '</span></div>';
+	$content .= ITT_GetWidget();
 	return $content;
-} 
+}
+
+function ITT_ShowWidget() {
+	echo ITT_GetWidget();
+}
+
+function ITT_GetWidget() {
+	global $post, $user_level, $showExistingTags;
+
+	$postid = $post->ID;
+	if (!current_user_can( 'edit_post', $postid )) return "";
+
+	$existingTagsWidget = "";
+	
+	if ($showExistingTags) {
+		$existingTagsWidget .= "<strong>Existing Tag</strong>: <select id=\"existingAddTag-$postid\">";
+		$tags = (array) get_terms('post_tag','get=all');
+		
+		foreach ($tags as $tag) {
+			$existingTagsWidget .= "<option value='$tag->slug'>$tag->name</option>";
+		}
+		
+		$existingTagsWidget .= "</select><input type=\"button\" value=\"+\" onClick=\"Things_AddTagToPost(document.getElementById('existingAddTag-$postid').value, '$postid')\" />";
+	}
+
+	return "<div style=\"border-top:1px solid #bbc; border-bottom:1px solid #bbc; background:#efefff; padding:3px;\"><strong>Add Tags</strong>: <input type=\"text\" size=\"9\" id=\"soloAddTag-$postid\" /><input type=\"button\" value=\"+\" onClick=\"Things_AddTagToPost(document.getElementById('soloAddTag-$postid').value, '$postid')\" /> &nbsp; Currently Assigned: <span id=\"assignedTags-$postid\">" . ITT_GetSimpleTagList($postid) . "</span><br />$existingTagsWidget</div>";
+}
 
 add_action('wp_head', 'ITT_ShowJavascript');
-add_action('the_content', 'ITT_ShowWidget');
+if ($automagicEmbed) {
+	add_action('the_content', 'ITT_EmbedWidget');
+}
 ?>
