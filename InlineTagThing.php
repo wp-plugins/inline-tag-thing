@@ -3,7 +3,7 @@
 Plugin Name: Inline Tag Thing
 Plugin URI: http://www.neato.co.nz/wordpress-things/inline-tag-thing
 Description: A thing for editing tags inline, using AJAX magic.
-Version: beta 3
+Version: beta 4
 Author: Christine From The Internet
 Author URI: http://www.neato.co.nz
 */
@@ -91,6 +91,7 @@ function ITT_GetSimpleTagList($postid) {
 }
 
 function ITT_ShowJavascript() {
+	global $pluginDirectory;
 	wp_print_scripts( array( 'sack' ));
 
 	  // Define custom JavaScript functions
@@ -98,7 +99,8 @@ function ITT_ShowJavascript() {
 	<script type="text/javascript">
 	function Things_AddTagToPost(tag, postid)
 	{
-		var mysack = new sack("<?php bloginfo( 'wpurl' ); ?><?php echo substr(__FILE__, strpos(__FILE__, '$pluginDirectory')) ?>" );    
+		var foo = "$pluginDirectory";
+		var mysack = new sack("<?php bloginfo( 'wpurl' ); ?><?php echo substr(__FILE__, strpos(__FILE__, $pluginDirectory)) ?>" );    
 		if (tag != "" && postid != "") {
 			mysack.execute = 1;
 			mysack.method = 'POST';
@@ -115,7 +117,7 @@ function ITT_ShowJavascript() {
 
 	function Things_RemoveTagFromPost(tag, postid)
 	{
-		var mysack = new sack("<?php bloginfo( 'wpurl' ); ?><?php echo substr(__FILE__, strpos(__FILE__, '$pluginDirectory')) ?>" );    
+		var mysack = new sack("<?php bloginfo( 'wpurl' ); ?><?php echo substr(__FILE__, strpos(__FILE__, $pluginDirectory)) ?>" );    
 		if (tag != "" && postid != "") {
 			mysack.execute = 1;
 			mysack.method = 'POST';
