@@ -3,7 +3,7 @@
 Plugin Name: Inline Tag Thing
 Plugin URI: http://www.neato.co.nz/wordpress-things/inline-tag-thing
 Description: A thing for editing tags inline, using AJAX magic.
-Version: beta 4
+Version: 1
 Author: Christine From The Internet
 Author URI: http://www.neato.co.nz
 */
@@ -169,7 +169,7 @@ function ITT_GetWidget() {
 		$existingTagsWidget .= "</select><input type=\"button\" value=\"+\" onClick=\"Things_AddTagToPost(document.getElementById('existingAddTag-$postid').value, '$postid')\" />";
 	}
 
-	return "<div style=\"border-top:1px solid #bbc; border-bottom:1px solid #bbc; background:#efefff; padding:3px;\"><strong>Add Tags</strong>: <input type=\"text\" size=\"9\" id=\"soloAddTag-$postid\" /><input type=\"button\" value=\"+\" onClick=\"Things_AddTagToPost(document.getElementById('soloAddTag-$postid').value, '$postid')\" /> &nbsp; Currently Assigned: <span id=\"assignedTags-$postid\">" . ITT_GetSimpleTagList($postid) . "</span><br />$existingTagsWidget</div>";
+	return "<div class=\"itt_tagBox\" style=\"border-top:1px solid #bbc; border-bottom:1px solid #bbc; background:#efefff; padding:3px;\"><strong>Add Tags</strong>: <input type=\"text\" size=\"9\" id=\"soloAddTag-$postid\" /><input type=\"button\" value=\"+\" onClick=\"Things_AddTagToPost(document.getElementById('soloAddTag-$postid').value, '$postid')\" /> &nbsp; Currently Assigned: <span id=\"assignedTags-$postid\">" . ITT_GetSimpleTagList($postid) . "</span><br />$existingTagsWidget</div>";
 }
 
 add_action('wp_head', 'ITT_ShowJavascript');

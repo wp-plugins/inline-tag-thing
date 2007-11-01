@@ -28,3 +28,5 @@ There are two advanced options.  To change these options, you'll need to set a c
 Changing $automagicEmbed to false will stop automagically including the inline tag adder at the end of your content,  which allows you to use the ITT_ShowWidget() template tag to display the inline tag adder in a location of your choosing.
 
 Changing $showExistingTags to true will add a dropdown list containing the tags which are currently in use which you can add by choosing a tag and clicking the + button.
+
+Also,  there's a CSS class, itt_tagBox which you can use to override the display of the inline tag box.
