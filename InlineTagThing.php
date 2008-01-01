@@ -3,7 +3,7 @@
 Plugin Name: Inline Tag Thing
 Plugin URI: http://www.neato.co.nz/wordpress-things/inline-tag-thing
 Description: A thing for editing tags inline, using AJAX magic.
-Version: 1
+Version: 1.2
 Author: Christine From The Internet
 Author URI: http://www.neato.co.nz
 */
@@ -15,7 +15,10 @@ $automagicEmbed = true;
 // If you change this to true, any existing tags will be included as a dropdown list along after the text box.
 $showExistingTags = false;
 
-$pluginDirectory = '/wp-content/plugins';
+// windows slashes go the other way.
+strstr( PHP_OS, "WIN") ? $slash = "\\" : $slash = "/";
+$pluginDirectory = $slash . 'wp-content' . $slash . 'plugins';
+
 
 // AJAX Processing
 if ($_POST['action'] && ($_POST['action'] == 'ITT_ProcessTag' || $_POST['action'] == 'ITT_ProcessRemoveTag') ) {
@@ -74,7 +77,7 @@ if ($_POST['action'] && ($_POST['action'] == 'ITT_ProcessTag' || $_POST['action'
 	} 
 	
 	// Compose JavaScript for return
-	die( 'document.getElementById("assignedTags-' . $postid . '").innerHTML = "' . (ITT_GetSimpleTagList($postid)) . '"');
+	die( 'document.getElementById("soloAddTag-' . $postid . '").value=""; document.getElementById("assignedTags-' . $postid . '").innerHTML = "' . (ITT_GetSimpleTagList($postid)) . '"');
 }
 
 function ITT_GetSimpleTagList($postid) {
@@ -100,7 +103,7 @@ function ITT_ShowJavascript() {
 	function Things_AddTagToPost(tag, postid)
 	{
 		var foo = "$pluginDirectory";
-		var mysack = new sack("<?php bloginfo( 'wpurl' ); ?><?php echo substr(__FILE__, strpos(__FILE__, $pluginDirectory)) ?>" );    
+		var mysack = new sack("<?php bloginfo( 'wpurl' ); ?><?php echo str_replace($slash, '/', substr(__FILE__, strpos(__FILE__, $pluginDirectory))) ?>" );    
 		if (tag != "" && postid != "") {
 			mysack.execute = 1;
 			mysack.method = 'POST';
@@ -117,7 +120,7 @@ function ITT_ShowJavascript() {
 
 	function Things_RemoveTagFromPost(tag, postid)
 	{
-		var mysack = new sack("<?php bloginfo( 'wpurl' ); ?><?php echo substr(__FILE__, strpos(__FILE__, $pluginDirectory)) ?>" );    
+		var mysack = new sack("<?php bloginfo( 'wpurl' ); ?><?php echo str_replace($slash, '/', substr(__FILE__, strpos(__FILE__, $pluginDirectory))) ?>" );    
 		if (tag != "" && postid != "") {
 			mysack.execute = 1;
 			mysack.method = 'POST';
